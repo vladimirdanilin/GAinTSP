@@ -10,34 +10,61 @@ namespace GAinTSP
     {
         static void Main(string[] args)
         {
-            List<int[]> ListOfParentalSpecies = new List<int[]>();
-            List<int[]> ListOfOffspringSpecies = new List<int[]>();
-            List<int[]> ListOfOffspringSpeciesMutated = new List<int[]>();
-
-            List<int[]> ListOfSpeciesUnited = new List<int[]>();
+            List<Person> ListOfParentalSpecies = new List<Person>();
+            List<Person> ListOfOffspringSpecies = new List<Person>();
+            List<Person> ListOfOffspringSpeciesMutated = new List<Person>();
+            List<Person> ListOfSpeciesUnited = new List<Person>();
+            List<Person> ListOfSpeciesSorted = new List<Person>();
             double[,] AdjMatrix;
+            int NumOfCities;
 
-            Console.WriteLine("Введите количество городов: ");
-            int NumOfCities = 5;
 
-            Chromosome chromosome = new Chromosome(NumOfCities);
+            Chromosome chromosome = new Chromosome();
+            NumOfCities = chromosome.GetNumOfCities();
 
-            Species species = new Species(NumOfCities, ListOfParentalSpecies, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
-            ListOfParentalSpecies = species.GetListOfParentalSpecies(ListOfParentalSpecies);
-            ListOfOffspringSpeciesMutated = species.GetListOfOffspringSpeciesMutated(ListOfOffspringSpeciesMutated);
-            ListOfSpeciesUnited = AddListToList(ListOfParentalSpecies, ListOfOffspringSpeciesMutated);
+            Population initialspecies = new Population(NumOfCities, ListOfParentalSpecies, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
+            
+            ListOfSpeciesUnited = UniteLists(ListOfParentalSpecies, ListOfOffspringSpeciesMutated);
 
-            foreach (var item in ListOfSpeciesUnited)
+            foreach (var person in ListOfSpeciesUnited)
             {
-                foreach (var item1 in item)
+                foreach (var gene in person.Genes)
                 {
-                    Console.Write(item1);
+                    Console.Write(gene);
                 }
                 Console.WriteLine();
             }
             AdjMatrix = chromosome.GetAdjMatrix();
-            Fitness fitness = new Fitness(ListOfSpeciesUnited, AdjMatrix);
 
+            Fitness fitness = new Fitness(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
+
+            ListOfSpeciesSorted = fitness.GetListOfSpeciesSorted();
+
+            while (ListOfSpeciesSorted[0].Fitness > 4)
+            {
+                ListOfParentalSpecies.Clear();
+                ListOfOffspringSpecies.Clear();
+                ListOfOffspringSpeciesMutated.Clear();
+                ListOfSpeciesUnited.Clear();
+                Population species = new Population(ListOfSpeciesSorted, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated, NumOfCities);
+                //ListOfParentalSpecies = species.GetListOfParentalSpecies(ListOfParentalSpecies);
+                //ListOfOffspringSpeciesMutated = species.GetListOfOffspringSpeciesMutated(ListOfOffspringSpeciesMutated);
+                ListOfSpeciesUnited = UniteLists(ListOfSpeciesSorted, ListOfOffspringSpeciesMutated);
+
+                foreach (var person in ListOfSpeciesUnited)
+                {
+                    foreach (var gene in person.Genes)
+                    {
+                        Console.Write(gene);
+                    }
+                    Console.WriteLine();
+                }
+                AdjMatrix = chromosome.GetAdjMatrix();
+
+                fitness = new Fitness(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
+                
+                ListOfSpeciesSorted = fitness.GetListOfSpeciesSorted();
+            }
             /*
              while ( F > 13)
             Новый список потомков из старых
@@ -45,23 +72,28 @@ namespace GAinTSP
             Фитнесс
             */
 
-            List<int[]> AddListToList(List<int[]> list1, List<int[]> list2)
+            List<Person> UniteLists(List<Person> species1, List<Person> species2)
             {
-                foreach (var item in list1)
+                foreach (var person in species1)
                 {
-                    ListOfSpeciesUnited.Add(item);
+                    ListOfSpeciesUnited.Add(person);
                 }
-                foreach (var item in list2)
+                foreach (var person in species2)
                 {
-                    if (ListOfSpeciesUnited.Contains(item))
-                        ListOfSpeciesUnited.Remove(item);
+                    if (ListOfSpeciesUnited.Contains(person))
+                        ListOfSpeciesUnited.Remove(person);
                 }
-                foreach (var item in list2)
+                foreach (var person in species2)
                 {
-                    ListOfSpeciesUnited.Add(item);
+                    ListOfSpeciesUnited.Add(person);
                 }
                 
                 return ListOfSpeciesUnited;
+            }
+
+            void FindSmallestDistance()
+            {
+                foreach (var person in ListOfSpeciesUnited) ;
             }
         }
     }

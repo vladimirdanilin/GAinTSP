@@ -16,5 +16,17 @@ namespace GAinTSP
             Genes = genes;
             Fitness = fitness;
         }
+
+        public void PrintPersonInfo()
+        {
+            Console.Write("Особь ");
+            foreach (var gene in Genes)
+            {
+                Console.Write(gene + " ");
+            }
+            Console.Write("Дистанция " + Fitness);
+            Console.WriteLine();
+        }
+
     }
 }
