@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace GAinTSP
 {
@@ -17,60 +15,26 @@ namespace GAinTSP
             List<Person> ListOfSpeciesSorted = new List<Person>();
             double[,] AdjMatrix;
             int NumOfCities;
+            Console.WriteLine("Введите количество особей, которое необходимо сгенерировать: ");
+            int NumOfSpecies = 30;
 
 
             Chromosome chromosome = new Chromosome();
-            NumOfCities = chromosome.GetNumOfCities();
+            NumOfCities = chromosome.Matrix();
 
-            Population initialspecies = new Population(NumOfCities, ListOfParentalSpecies, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
-            
-            ListOfSpeciesUnited = UniteLists(ListOfParentalSpecies, ListOfOffspringSpeciesMutated);
-
-            foreach (var person in ListOfSpeciesUnited)
-            {
-                foreach (var gene in person.Genes)
-                {
-                    Console.Write(gene);
-                }
-                Console.WriteLine();
-            }
             AdjMatrix = chromosome.GetAdjMatrix();
 
-            Fitness fitness = new Fitness(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
+            GenerateInitialPopulation();
+            
 
-            ListOfSpeciesSorted = fitness.GetListOfSpeciesSorted();
 
-            while (ListOfSpeciesSorted[0].Fitness > 4)
+            while (ListOfSpeciesSorted[0].Fitness != 11)
             {
-                ListOfParentalSpecies.Clear();
-                ListOfOffspringSpecies.Clear();
-                ListOfOffspringSpeciesMutated.Clear();
-                ListOfSpeciesUnited.Clear();
-                Population species = new Population(ListOfSpeciesSorted, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated, NumOfCities);
-                //ListOfParentalSpecies = species.GetListOfParentalSpecies(ListOfParentalSpecies);
-                //ListOfOffspringSpeciesMutated = species.GetListOfOffspringSpeciesMutated(ListOfOffspringSpeciesMutated);
-                ListOfSpeciesUnited = UniteLists(ListOfSpeciesSorted, ListOfOffspringSpeciesMutated);
-
-                foreach (var person in ListOfSpeciesUnited)
-                {
-                    foreach (var gene in person.Genes)
-                    {
-                        Console.Write(gene);
-                    }
-                    Console.WriteLine();
-                }
-                AdjMatrix = chromosome.GetAdjMatrix();
-
-                fitness = new Fitness(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
-                
-                ListOfSpeciesSorted = fitness.GetListOfSpeciesSorted();
+                GenerateNewPopulation();
             }
-            /*
-             while ( F > 13)
-            Новый список потомков из старых
-            Мутации
-            Фитнесс
-            */
+
+            PrintToFile();
+
 
             List<Person> UniteLists(List<Person> species1, List<Person> species2)
             {
@@ -91,10 +55,53 @@ namespace GAinTSP
                 return ListOfSpeciesUnited;
             }
 
-            void FindSmallestDistance()
+            void GenerateInitialPopulation()
             {
-                foreach (var person in ListOfSpeciesUnited) ;
+                Population initialspecies = new Population(NumOfSpecies);
+                ListOfParentalSpecies = initialspecies.GenerateSpecies(NumOfCities, ListOfParentalSpecies);
+                initialspecies.PrintGenesOfSpecies(ListOfParentalSpecies, "ListOfParentalSpecies");
+                ListOfOffspringSpecies = initialspecies.Crossover(NumOfCities, ListOfParentalSpecies, ListOfOffspringSpecies);
+                ListOfOffspringSpeciesMutated = initialspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
+                ListOfSpeciesUnited = UniteLists(ListOfParentalSpecies, ListOfOffspringSpeciesMutated);
+                CountDistance(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
             }
+
+            void GenerateNewPopulation()
+            {
+                ListOfParentalSpecies.Clear();
+                ListOfOffspringSpecies.Clear();
+                ListOfOffspringSpeciesMutated.Clear();
+                ListOfSpeciesUnited.Clear();
+                Population newspecies = new Population(NumOfSpecies);
+                newspecies.PrintGenesOfSpecies(ListOfSpeciesSorted, "ListOfParentalSpecies");
+                ListOfOffspringSpecies = newspecies.Crossover(NumOfCities, ListOfSpeciesSorted, ListOfOffspringSpecies);
+                ListOfOffspringSpeciesMutated = newspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
+                ListOfSpeciesUnited = UniteLists(ListOfSpeciesSorted, ListOfOffspringSpeciesMutated);
+                CountDistance(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
+            }
+
+            List<Person> CountDistance(List<Person> listOfSpeciesUnited, double[,] adjMatrix, List<Person> listOfSpeciesSorted)
+            {
+                Fitness fitness = new Fitness();
+                ListOfSpeciesSorted = fitness.CountDistance(listOfSpeciesUnited, adjMatrix, listOfSpeciesSorted);
+                return ListOfSpeciesSorted;
+            }
+
+            void PrintToFile()
+            {
+                string writePath = @"C:\Users\Владимир\source\repos\GAinTSP\bin\Debug\results.txt";
+                using (var sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
+                {
+                    sw.Write("Кратчайший маршрут: 0 ");
+                    foreach (var city in ListOfSpeciesSorted[0].Genes)
+                    {
+                        sw.Write(city + " ");
+                    }
+                    sw.Write("0 с длиной пути " + ListOfSpeciesSorted[0].Fitness);
+
+                }
+            }
+            
         }
     }
 }

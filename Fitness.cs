@@ -12,23 +12,28 @@ namespace GAinTSP
         double[] ResultSorted;
         List<Person> listOfSpeciesSorted { get; set;}
 
-        public Fitness(List<Person> listOfSpeciesUnited, double[,] adjmatrix, List<Person> ListOfSpeciesSorted)
+        public Fitness()
+        {
+            
+        }
+
+        public List<Person> CountDistance(List<Person> listOfSpeciesUnited, double[,] adjmatrix, List<Person> ListOfSpeciesSorted)
         {
             Selection(listOfSpeciesUnited, adjmatrix);
             SortListOfSpeciesUnited(listOfSpeciesUnited, ListOfSpeciesSorted);
             PrintSpecies(listOfSpeciesSorted);
+            return listOfSpeciesSorted;
         }
 
         public void Selection(List<Person> listOfSpeciesUnited, double[,] adjmatrix)
         {
-            double sum = 0;
+            double sum;
             Result = new double[listOfSpeciesUnited.Count];
             ResultSorted = new double[listOfSpeciesUnited.Count];
 
             foreach (var person in listOfSpeciesUnited)
             {
                 sum = Count(person.Genes, adjmatrix);
-                int n = listOfSpeciesUnited.FindIndex(x => x == person);
                 person.Fitness = sum;
                 person.PrintPersonInfo();
             }
@@ -36,7 +41,7 @@ namespace GAinTSP
         }
 
         public double Count(int[] genes, double[,] adjmatrix)
-        {
+        { //Подсчет расстояния
             double sum = 0;
             for (int i = 0; i < genes.Length; i++)
             {
@@ -49,6 +54,7 @@ namespace GAinTSP
                     sum += adjmatrix[genes[i], genes[i + 1]];
                 }
             }
+            sum = sum + adjmatrix[genes[genes.Length-1], 0];
             return sum;
         }
 

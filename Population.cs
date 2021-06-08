@@ -9,33 +9,17 @@ namespace GAinTSP
     public class Population
     {
         int NumOfSpecies { get; set; }
-        //List<int[]> ListOfParentalSpecies = new List<int[]>();
-        //List<int[]> ListOfOffspringSpecies = new List<int[]>();
-        //List<int[]> ListOfOffspringSpeciesMutated = new List<int[]>();
         Random random = new Random(DateTime.Now.Millisecond);
 
-        public Population(int numofcities, List<Person> listOfParentalSpecies, List<Person> listOfOffspringSpecies, List<Person> listOfOffspringSpeciesMutated)
+        public Population(int numOfSpecies)
         {
-            Console.WriteLine("Введите количество особей, которое необходимо сгенерировать: ");
-            NumOfSpecies = 10;
-            GenerateSpecies(numofcities, listOfParentalSpecies);
-            PrintGenesOfSpecies(listOfParentalSpecies, "ListOfParentalSpecies");
-            Crossover(numofcities, listOfParentalSpecies, listOfOffspringSpecies);
-            Mutation(numofcities, listOfOffspringSpecies, listOfOffspringSpeciesMutated);
-        }
-
-        public Population(List<Person> listOfSortedSpecies, List<Person> listOfOffspringSpecies, List<Person> listOfOffspringSpeciesMutated, int numofcities)
-        {
-            Console.WriteLine("Введите количество особей, которое необходимо сгенерировать: ");
-            NumOfSpecies = 10;
-            PrintGenesOfSpecies(listOfSortedSpecies, "ListOfParentalSpecies");
-            Crossover(numofcities, listOfSortedSpecies, listOfOffspringSpecies);
-            Mutation(numofcities, listOfOffspringSpecies, listOfOffspringSpeciesMutated);
+            NumOfSpecies = numOfSpecies;
         }
 
 
 
-        public void GenerateSpecies(int numofcities, List<Person> listOfParentalSpecies)
+
+        public List<Person> GenerateSpecies(int numofcities, List<Person> listOfParentalSpecies)
         {
             //Создание начальной популяции
             
@@ -54,11 +38,12 @@ namespace GAinTSP
                 Person person = new Person(genes1, 0);
                 listOfParentalSpecies.Add(person);
             }
+            return listOfParentalSpecies;
         }
 
 
 
-        public void Crossover(int numofcities, List<Person> listOfParentalSpecies, List<Person> listOfOffspringSpecies)
+        public List<Person> Crossover(int numofcities, List<Person> listOfParentalSpecies, List<Person> listOfOffspringSpecies)
         {
             int[] mother = new int[numofcities - 1];
             int[] father = new int[numofcities - 1];
@@ -70,28 +55,28 @@ namespace GAinTSP
                 father = listOfParentalSpecies.ElementAt(random.Next(NumOfSpecies/2, NumOfSpecies)).Genes;
                 offspring1 = Breeding(mother, father, numofcities);
                 offspring2 = Breeding(father, mother, numofcities);
-                //PrintSpecies(mother, "Mother");
-                //PrintSpecies(father, "Father");
-                //PrintSpecies(offspring1, "Offspring1");
-                //PrintSpecies(offspring2, "Offspring2");
+
                 Person person1 = new Person(offspring1, 0);
                 Person person2 = new Person(offspring2, 0);
                 listOfOffspringSpecies.Add(person1);
                 listOfOffspringSpecies.Add(person2);
             }
-       
+            return listOfOffspringSpecies;
+
+
 
         }
 
         public int[] Breeding(int[] mother, int[] father, int numofcities)
         {
+            int r = random.Next(0,numofcities);
             int[] offspring = new int[numofcities - 1];
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < r; i++)
             {
                 offspring[i] = mother[i];
             }
 
-            for (int i = 3; i < numofcities; i++)
+            for (int i = r; i < numofcities; i++)
             {
                 foreach (var gene in father)
                 {
@@ -105,7 +90,7 @@ namespace GAinTSP
             return offspring;
         }
 
-        public void Mutation(int numofcities, List<Person> listOfOffspringSpecies, List<Person> listOfOffspringSpeciesMutated)
+        public List<Person> Mutation(int numofcities, List<Person> listOfOffspringSpecies, List<Person> listOfOffspringSpeciesMutated)
         {
             int[] arr;
             PrintGenesOfSpecies(listOfOffspringSpecies, "ListOfOffspringSpecies");
@@ -114,38 +99,23 @@ namespace GAinTSP
             {
 
                 int a = random.Next(0, numofcities - 1);
-                //Console.WriteLine("a = " + a);
                 int b = random.Next(a + 1, numofcities - 1);
-                //Console.WriteLine("b = " + b);
                 arr = new int[b - a];
                 Array.Copy(offspring.Genes, a, arr, 0, arr.Length);
-                //PrintSpecies(offspring, "Offspring");
-                //PrintSpecies(arr, "Array");
 
                 arr = arr.Reverse().ToArray();
 
-                //PrintSpecies(arr, "ArrayReversed");
 
                 Array.Copy(arr, 0, offspring.Genes, a, arr.Length);
 
-                //PrintSpecies(offspring, "OffspringMutated");
 
-                    listOfOffspringSpeciesMutated.Add(offspring);              
+                listOfOffspringSpeciesMutated.Add(offspring);              
               
             }
             PrintGenesOfSpecies(listOfOffspringSpeciesMutated, "ListOfOffspringSpeciesMutated");
-
+            return listOfOffspringSpeciesMutated;
         }
 
-
-        static bool Contains(int[] array, int value)
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == value) return true;
-            }
-            return false;
-        }
 
         public void PrintGenesOfSpecies(List <Person> list, string name)
         {
@@ -169,16 +139,6 @@ namespace GAinTSP
                 Console.Write(city + " ");
             }
             Console.WriteLine("\n======================================");
-        }
-
-        public List<Person> GetListOfParentalSpecies(List<Person> listOfParentalSpecies)
-        {
-            return listOfParentalSpecies;
-        }
-
-        public List<Person> GetListOfOffspringSpeciesMutated(List<Person> listOfOffspringSpeciesMutated)
-        {
-            return listOfOffspringSpeciesMutated;
         }
 
 
