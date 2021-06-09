@@ -19,24 +19,33 @@ namespace GAinTSP
             
         }
 
-        public int Matrix()
+        public int Matrix(string inputFile)
         {
-            AddAdjMatrix();
+            AddAdjMatrix(inputFile);
             PrintAdjMatrix();
             return NumOfCities;
         }
 
-        public void AddAdjMatrix()
+        public void AddAdjMatrix(string inputFile)
         {
+            string InputPath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
+            string InputPathDefault = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\text.txt";
+            string[] strings = File.ReadAllLines(@InputPathDefault);
 
-            string[] strings = File.ReadAllLines(@"C:\Users\Владимир\source\repos\GAinTSP\bin\Debug\text.txt");
+            if (inputFile != null)
+            {
+                InputPath = InputPath + inputFile;
+                strings = File.ReadAllLines(@InputPath);
+            }
+            
+
             NumOfCities = strings[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Length;
             AdjMatrix = new double[NumOfCities, NumOfCities];
 
 
             for (int i = 0; i < NumOfCities; i++)
             {
-                int[] row = strings[i].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+                double[] row = strings[i].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(double.Parse).ToArray();
                 for (int j = 0; j < NumOfCities; j++)
                 {
                     AdjMatrix[i, j] = row[j];
@@ -49,16 +58,17 @@ namespace GAinTSP
 
        
 
-        void PrintAdjMatrix()
+        public string PrintAdjMatrix()
         {
             for (int i = 0; i < NumOfCities; i++)
             {
                 for (int j = 0; j < NumOfCities; j++)
                 {
-                    Console.Write(AdjMatrix[i,j] + " ");
+                    return (AdjMatrix[i,j].ToString() + " ");
                 }
-                Console.WriteLine();
+                return "\n";
             }
+            return "";
         }
 
         public double[,] GetAdjMatrix()
