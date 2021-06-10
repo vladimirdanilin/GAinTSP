@@ -18,11 +18,11 @@ namespace GAinTSP
         List<Person> BestSpecies = new List<Person>();
         int NumOfCities;
         int NumOfSpecies;
-        double Result;
+        double Result; //Значение функции пригодности
         int NumOfPopulations;
-        int MaxNumOfPopulations = 60;
+        int MaxNumOfPopulations = 60; //Дефолтное значение количества поколений, после которого генерируется новое начальное поколение
         bool Checked;
-        string krit = "";
+        string krit = ""; //Зависит от k (Было ли достигнуто критическое число поколений)
         public Start(int numOfSpecies, double result, int numOfPopulations, bool Checked1, int maxNumOfPopulations)
         {
             NumOfSpecies = numOfSpecies;
@@ -59,11 +59,11 @@ namespace GAinTSP
 
             
 
-            void AppStartResult()
+            void AppStartResult() //Запускается метод, работающий по минимальному значению функции пригодности
             {
                 GenerateInitialPopulation();
                 int n = 1; //Число поколений, по истечению которого происходит новая генерация начального поколения.
-                int k = 1; //Максимально возможное число поколений.
+                int k = 1; //Максимально возможное число поколений(Критическое число).
                 
                 while ((ListOfSpeciesSorted[0].Fitness > Result) && (k < 200))
                 {
@@ -85,7 +85,7 @@ namespace GAinTSP
                 PrintToFile(outputFile, ListOfSpeciesSorted, krit);
             }
 
-            void AppStartPopulations()
+            void AppStartPopulations() //Запускается метод, работающий по количеству поколений
             {
                 int n = 1;
                 GenerateInitialPopulation();
@@ -105,24 +105,13 @@ namespace GAinTSP
                         }
                         
                     }
-                    Console.WriteLine(n);
-                    Console.WriteLine("++++++++++++++++++++++++++++++");
-                    foreach (var item in BestSpecies)
-                    {
-                        item.PrintPersonInfo();
-                    }
+
                     BestSpecies = BestSpecies.OrderBy(x => x.Fitness).ToList();
-                    Console.WriteLine("++++++++++++++++++++++++++++++");
-                    foreach (var item in BestSpecies)
-                    {
-                        item.PrintPersonInfo();
-                    }
+
                 }
                 
-
                 PrintToFile(outputFile, BestSpecies, krit);
 
-                Console.WriteLine("++++++++++++++++++++++++++++++");
             }
 
 
@@ -148,9 +137,9 @@ namespace GAinTSP
 
             void GenerateInitialPopulation()
             {
+                //Генерируется исходное (начальное поколение)
                 Population initialspecies = new Population(NumOfSpecies);
                 ListOfParentalSpecies = initialspecies.GenerateSpecies(NumOfCities, ListOfParentalSpecies);
-                initialspecies.PrintGenesOfSpecies(ListOfParentalSpecies, "ListOfParentalSpecies");
                 ListOfOffspringSpecies = initialspecies.Crossover(NumOfCities, ListOfParentalSpecies, ListOfOffspringSpecies);
                 ListOfOffspringSpeciesMutated = initialspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
                 ListOfSpeciesUnited = UniteLists(ListOfParentalSpecies, ListOfOffspringSpeciesMutated);
@@ -159,12 +148,12 @@ namespace GAinTSP
 
             void GenerateNewPopulation()
             {
+                //Генерируется новое поколение из ListOfSpeciesSorted (Лучшие особи)
                 ListOfParentalSpecies.Clear();
                 ListOfOffspringSpecies.Clear();
                 ListOfOffspringSpeciesMutated.Clear();
                 ListOfSpeciesUnited.Clear();
                 Population newspecies = new Population(NumOfSpecies);
-                newspecies.PrintGenesOfSpecies(ListOfSpeciesSorted, "ListOfParentalSpecies");
                 ListOfOffspringSpecies = newspecies.Crossover(NumOfCities, ListOfSpeciesSorted, ListOfOffspringSpecies);
                 ListOfOffspringSpeciesMutated = newspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
                 ListOfSpeciesUnited = UniteLists(ListOfSpeciesSorted, ListOfOffspringSpeciesMutated);
@@ -193,23 +182,24 @@ namespace GAinTSP
                 }
 
                 List<Person> TestList = new List<Person>();
-                List<Person> TestListDefault = new List<Person>();
-                List<Person> TestList1 = new List<Person>(TestList.Count);
                 
                 
                 TestList.AddRange(list.ToList());
-                foreach (var person in list)
+                foreach (var person in list) //Отбираются только лучшие особи с минимальным значением функции качества
                 {
                     if (person.Fitness != list[0].Fitness)
                     {
                         TestList.Remove(person);
                     }
                 }
-                double[] arr = new double[TestList.Count];
+
+
+                double[] arr = new double[TestList.Count]; //Массив для исключения повторяющихся элементов
                 for (int i = 0; i < TestList.Count; i++)
                 {
                     arr[i] = TestList[i].Fitness;
                 }
+
 
                 for (int i = 0; i < TestList.Count; i++)
                 {
@@ -220,24 +210,12 @@ namespace GAinTSP
                         {
                             if (TestList[i].Genes.SequenceEqual(TestList[j].Genes))
                             {
-                                arr[j] = 0;
+                                arr[j] = 0; //Если элемент повторяется, значение в массиве с его индексом равно 0
                             }
                         }
                     }
                 }
 
-                /*
-                 for (int i = 0; i < TestList.Count(); i++)
-                {
-
-                    for (int j = i + 1; j < TestList.Count(); j++)
-                    {
-                        if (TestList[i].Genes.SequenceEqual(TestList[j].Genes))
-                        {
-                            TestList1.RemoveAt(j);
-                        }
-                    }
-                }*/
 
                 using (var sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
                 {
@@ -263,40 +241,7 @@ namespace GAinTSP
                 }
             }
 
-            /*void PrintToFile(string OutputFile, List<Person> list, string krit)
-            {
-                string writePath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
-                string writePathDefault = @"C:\Users\Владимир\source\repos\GAinTSP — MAIN\bin\Debug\result.txt";
-
-                if (OutputFile != null)
-                {
-                    writePath = writePath + OutputFile;
-                }
-                else
-                {
-                    writePath = writePathDefault;
-                }
-
-
-                using (var sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
-                {
-                    if (krit.Length != 0)
-                    {
-                        sw.Write(krit);
-                    }
-                    else
-                    {
-
-                        sw.Write("Кратчайший маршрут: 0 ");
-                        foreach (var city in list[0].Genes)
-                        {
-                            sw.Write(city + " ");
-                        }
-                        sw.Write("0 с длиной пути " + list[0].Fitness);
-                    }
-                }
-            }*/
-
+            
         }
         
     }

@@ -21,7 +21,6 @@ namespace GAinTSP
         {
             Selection(listOfSpeciesUnited, adjmatrix);
             SortListOfSpeciesUnited(listOfSpeciesUnited, ListOfSpeciesSorted);
-            PrintSpecies(listOfSpeciesSorted);
             return listOfSpeciesSorted;
         }
 
@@ -35,13 +34,12 @@ namespace GAinTSP
             {
                 sum = Count(person.Genes, adjmatrix);
                 person.Fitness = sum;
-                person.PrintPersonInfo();
             }
 
         }
 
         public double Count(int[] genes, double[,] adjmatrix)
-        { //Подсчет расстояния
+        { //Подсчет значения функции пригодности каждой особи
             double sum = 0;
             for (int i = 0; i < genes.Length; i++)
             {
@@ -60,6 +58,8 @@ namespace GAinTSP
 
         public void SortListOfSpeciesUnited(List<Person> listOfSpeciesUnited, List<Person> ListOfSpeciesSorted)
         {
+            //Сортирует объединенный список по значению функции пригодности. Первые 10 элементов переходят в новый список.
+
             ListOfSpeciesSorted = listOfSpeciesUnited.OrderBy(x => x.Fitness).ToList();
 
             int n = ListOfSpeciesSorted.Count()/2;
@@ -68,16 +68,6 @@ namespace GAinTSP
             ListOfSpeciesSorted.RemoveRange(n, m);
 
             listOfSpeciesSorted = ListOfSpeciesSorted;
-        }
-
-
-        public void PrintSpecies(List<Person> listOfSpeciesUnited)
-        {
-            Console.WriteLine("=====================================");
-            foreach (var person in listOfSpeciesUnited)
-            {
-                person.PrintPersonInfo();
-            }
         }
 
         public List<Person> GetListOfSpeciesSorted()

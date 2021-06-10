@@ -31,10 +31,6 @@ namespace GAinTSP
             InitializeComponent();
         }
 
-        /*private void Menu_Load(object sender, EventArgs e)
-        {
-
-        }*/
 
 
 
@@ -101,7 +97,6 @@ namespace GAinTSP
         {
             Start start = new Start(NumOfSpecies, Result, NumOfPopulations, Checked, MaxNumOfPopulations);
             start.Run(InputFile, OutputFile);
-            //PrintMatrix();
 
             string InputPath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
             MatrixBox.Text = File.ReadAllText(@"C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\text.txt");
@@ -113,72 +108,17 @@ namespace GAinTSP
             }
 
             string OutputPath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
-            ResultLabel.Text = File.ReadAllText(@"C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\result.txt", System.Text.Encoding.Default);
+            ResultTextBox.Text = File.ReadAllText(@"C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\result.txt", System.Text.Encoding.Default);
 
             if (OutputFile != null)
             {
                 OutputPath = OutputPath + OutputFile;
-                ResultLabel.Text = File.ReadAllText(OutputPath, System.Text.Encoding.Default);
+                ResultTextBox.Text = File.ReadAllText(OutputPath, System.Text.Encoding.Default);
             }
 
-            ResultLabel.Visible = true;
             
         }
 
-        private void PrintMatrix()
-        {
-            DataGridView dataGridView = new DataGridView();
-            Chromosome chromosome = new Chromosome();
-            double[,] Matrix = chromosome.GetAdjMatrix();
-
-
-            /*    //указываем контроллу в который пишем количество строк и столбцов
-                dataGridView.RowCount = Matrix.Length / 2;
-                dataGridView.ColumnCount = Matrix.Length / 2;
-                for (int i = 0; i < Matrix.Length / 2; i++)
-                {
-                    for (int j = 0; j < Matrix.Length / 2; j++)
-                    {
-                        //пишем значения из массива в ячейки контролла
-                        dataGridView.Rows[i].Cells[j].Value = Matrix[i, j];
-                    }
-                }
-            AdjMatrixLabel.Text = dataGridView.CurrentCell.Value.ToString();*/
-
-
-            /*for (int i = 0; i < chromosome.NumOfCities; i++)
-            {
-                string str = "";
-                Label label = new Label();
-                label.Visible = true;
-                label.AutoSize = true;
-                label.Location;
-                for (int j = 0; j < chromosome.NumOfCities; j++)
-                {
-                    str = str + Matrix[i, j].ToString();
-                }
-
-                label.Text = str;
-            }*/
-
-            /*//string str = "";
-            //Label label = new Label();
-            AdjMatrixLabel.Visible = true;
-            AdjMatrixLabel.AutoSize = true;
-
-            for (int i = 0; i < chromosome.NumOfCities; i++)
-            {
-                
-                for (int j = 0; j < chromosome.NumOfCities; j++)
-                {
-                    AdjMatrixLabel.Text = Matrix[i, j].ToString();
-                    AdjMatrixLabel.Text = Environment.NewLine;
-                }
-
-            }*/
-
-
-        }
 
     }
 }

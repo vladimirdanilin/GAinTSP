@@ -93,7 +93,6 @@ namespace GAinTSP
         public List<Person> Mutation(int numofcities, List<Person> listOfOffspringSpecies, List<Person> listOfOffspringSpeciesMutated)
         {
             int[] arr;
-            PrintGenesOfSpecies(listOfOffspringSpecies, "ListOfOffspringSpecies");
 
             foreach (var offspring in listOfOffspringSpecies)
             {
@@ -112,37 +111,8 @@ namespace GAinTSP
                 listOfOffspringSpeciesMutated.Add(offspring);              
               
             }
-            PrintGenesOfSpecies(listOfOffspringSpeciesMutated, "ListOfOffspringSpeciesMutated");
             return listOfOffspringSpeciesMutated;
         }
-
-
-        public void PrintGenesOfSpecies(List <Person> list, string name)
-        {
-            Console.WriteLine(name);
-            foreach (var species in list)
-            {
-                foreach (var city in species.Genes)
-                {
-                    Console.Write(city + " ");
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine("======================================");
-        }
-
-        public void PrintGenesOfPerson(Person person, string name)
-        {
-            Console.WriteLine(name);
-            foreach (var city in person.Genes)
-            {
-                Console.Write(city + " ");
-            }
-            Console.WriteLine("\n======================================");
-        }
-
-
-
 
     }
 }

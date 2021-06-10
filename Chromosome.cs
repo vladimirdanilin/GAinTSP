@@ -22,12 +22,12 @@ namespace GAinTSP
         public int Matrix(string inputFile)
         {
             AddAdjMatrix(inputFile);
-            PrintAdjMatrix();
             return NumOfCities;
         }
 
         public void AddAdjMatrix(string inputFile)
         {
+            //Получение матрицы смежности из txt файла
             string InputPath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
             string InputPathDefault = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\text.txt";
             string[] strings = File.ReadAllLines(@InputPathDefault);
@@ -52,24 +52,10 @@ namespace GAinTSP
                 }
 
             }
-            Console.WriteLine(NumOfCities);
 
         }
 
-       
-
-        public string PrintAdjMatrix()
-        {
-            for (int i = 0; i < NumOfCities; i++)
-            {
-                for (int j = 0; j < NumOfCities; j++)
-                {
-                    return (AdjMatrix[i,j].ToString() + " ");
-                }
-                return "\n";
-            }
-            return "";
-        }
+      
 
         public double[,] GetAdjMatrix()
         {

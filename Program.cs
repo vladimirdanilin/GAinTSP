@@ -12,7 +12,6 @@ namespace GAinTSP
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Menu());
-            Menu menu = new Menu();
         }
     }
 }

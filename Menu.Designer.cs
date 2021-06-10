@@ -46,6 +46,7 @@ namespace GAinTSP
             this.MatrixBox = new System.Windows.Forms.RichTextBox();
             this.ResultLabel = new System.Windows.Forms.Label();
             this.MatrixLabel = new System.Windows.Forms.Label();
+            this.ResultTextBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -186,12 +187,10 @@ namespace GAinTSP
             // 
             // ResultLabel
             // 
-            this.ResultLabel.AutoSize = true;
-            this.ResultLabel.Location = new System.Drawing.Point(118, 400);
+            this.ResultLabel.Location = new System.Drawing.Point(0, 0);
             this.ResultLabel.Name = "ResultLabel";
-            this.ResultLabel.Size = new System.Drawing.Size(0, 13);
-            this.ResultLabel.TabIndex = 20;
-            this.ResultLabel.Visible = false;
+            this.ResultLabel.Size = new System.Drawing.Size(100, 23);
+            this.ResultLabel.TabIndex = 22;
             // 
             // MatrixLabel
             // 
@@ -202,11 +201,20 @@ namespace GAinTSP
             this.MatrixLabel.TabIndex = 21;
             this.MatrixLabel.Text = "Исходная матрица смежности графа";
             // 
+            // ResultTextBox
+            // 
+            this.ResultTextBox.Location = new System.Drawing.Point(45, 327);
+            this.ResultTextBox.Name = "ResultTextBox";
+            this.ResultTextBox.Size = new System.Drawing.Size(402, 111);
+            this.ResultTextBox.TabIndex = 23;
+            this.ResultTextBox.Text = "";
+            // 
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.ResultTextBox);
             this.Controls.Add(this.MatrixLabel);
             this.Controls.Add(this.ResultLabel);
             this.Controls.Add(this.MatrixBox);
@@ -249,5 +257,6 @@ namespace GAinTSP
         private System.Windows.Forms.RichTextBox MatrixBox;
         private System.Windows.Forms.Label ResultLabel;
         private System.Windows.Forms.Label MatrixLabel;
+        private System.Windows.Forms.RichTextBox ResultTextBox;
     }
 }
