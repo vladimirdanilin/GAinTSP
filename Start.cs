@@ -96,7 +96,14 @@ namespace GAinTSP
                     { 
                         GenerateNewPopulation();
                         n++;
-                        BestSpecies.Add(ListOfSpeciesSorted[0]);
+                        foreach (var person in ListOfSpeciesSorted)
+                        {
+                            if (person.Fitness == ListOfSpeciesSorted[0].Fitness)
+                            {
+                                BestSpecies.Add(person);
+                            }
+                        }
+                        
                     }
                     Console.WriteLine(n);
                     Console.WriteLine("++++++++++++++++++++++++++++++");
@@ -184,7 +191,53 @@ namespace GAinTSP
                 {
                     writePath = writePathDefault;
                 }
+
+                List<Person> TestList = new List<Person>();
+                List<Person> TestListDefault = new List<Person>();
+                List<Person> TestList1 = new List<Person>(TestList.Count);
                 
+                
+                TestList.AddRange(list.ToList());
+                foreach (var person in list)
+                {
+                    if (person.Fitness != list[0].Fitness)
+                    {
+                        TestList.Remove(person);
+                    }
+                }
+                double[] arr = new double[TestList.Count];
+                for (int i = 0; i < TestList.Count; i++)
+                {
+                    arr[i] = TestList[i].Fitness;
+                }
+
+                for (int i = 0; i < TestList.Count; i++)
+                {
+                    if (arr[i] != 0)
+                    {
+
+                        for (int j = i + 1; j < TestList.Count; j++)
+                        {
+                            if (TestList[i].Genes.SequenceEqual(TestList[j].Genes))
+                            {
+                                arr[j] = 0;
+                            }
+                        }
+                    }
+                }
+
+                /*
+                 for (int i = 0; i < TestList.Count(); i++)
+                {
+
+                    for (int j = i + 1; j < TestList.Count(); j++)
+                    {
+                        if (TestList[i].Genes.SequenceEqual(TestList[j].Genes))
+                        {
+                            TestList1.RemoveAt(j);
+                        }
+                    }
+                }*/
 
                 using (var sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
                 {
@@ -194,7 +247,46 @@ namespace GAinTSP
                     }
                     else
                     {
-                        
+                        for (int i = 0; i < TestList.Count; i++)
+                        {
+                            if (arr[i] != 0)
+                            {
+                                sw.Write("Кратчайший маршрут: 0 ");
+                                foreach (var city in TestList[i].Genes)
+                                {
+                                    sw.Write(city + " ");
+                                }
+                                sw.Write("0 с длиной пути " + TestList[i].Fitness + "\n");
+                            }
+                        }
+                    }
+                }
+            }
+
+            /*void PrintToFile(string OutputFile, List<Person> list, string krit)
+            {
+                string writePath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
+                string writePathDefault = @"C:\Users\Владимир\source\repos\GAinTSP — MAIN\bin\Debug\result.txt";
+
+                if (OutputFile != null)
+                {
+                    writePath = writePath + OutputFile;
+                }
+                else
+                {
+                    writePath = writePathDefault;
+                }
+
+
+                using (var sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
+                {
+                    if (krit.Length != 0)
+                    {
+                        sw.Write(krit);
+                    }
+                    else
+                    {
+
                         sw.Write("Кратчайший маршрут: 0 ");
                         foreach (var city in list[0].Genes)
                         {
@@ -203,7 +295,7 @@ namespace GAinTSP
                         sw.Write("0 с длиной пути " + list[0].Fitness);
                     }
                 }
-            }
+            }*/
 
         }
         
