@@ -22,6 +22,7 @@ namespace GAinTSP
         int NumOfPopulations;
         int MaxNumOfPopulations = 60;
         bool Checked;
+        string krit = "";
         public Start(int numOfSpecies, double result, int numOfPopulations, bool Checked1, int maxNumOfPopulations)
         {
             NumOfSpecies = numOfSpecies;
@@ -63,6 +64,7 @@ namespace GAinTSP
                 GenerateInitialPopulation();
                 int n = 1; //Число поколений, по истечению которого происходит новая генерация начального поколения.
                 int k = 1; //Максимально возможное число поколений.
+                
                 while ((ListOfSpeciesSorted[0].Fitness > Result) && (k < 200))
                 {
                     GenerateNewPopulation();
@@ -75,10 +77,12 @@ namespace GAinTSP
                     }
                     k++;
                 }
-                Console.WriteLine(k);
+                if (k == 200)
+                {
+                    krit = "Было достигнуто критическое количество поколений (200). Решение не найдено!";
+                }
 
-                PrintToFile(outputFile, ListOfSpeciesSorted);
-
+                PrintToFile(outputFile, ListOfSpeciesSorted, krit);
             }
 
             void AppStartPopulations()
@@ -109,7 +113,7 @@ namespace GAinTSP
                 }
                 
 
-                PrintToFile(outputFile, BestSpecies);
+                PrintToFile(outputFile, BestSpecies, krit);
 
                 Console.WriteLine("++++++++++++++++++++++++++++++");
             }
@@ -167,7 +171,7 @@ namespace GAinTSP
                 return ListOfSpeciesSorted;
             }
 
-            void PrintToFile(string OutputFile, List <Person> list)
+            void PrintToFile(string OutputFile, List <Person> list, string krit)
             {
                 string writePath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
                 string writePathDefault = @"C:\Users\Владимир\source\repos\GAinTSP — MAIN\bin\Debug\result.txt";
@@ -181,17 +185,26 @@ namespace GAinTSP
                     writePath = writePathDefault;
                 }
                 
+
                 using (var sw = new StreamWriter(writePath, false, System.Text.Encoding.Default))
                 {
-                    sw.Write("Кратчайший маршрут: 0 ");
-                    foreach (var city in list[0].Genes)
+                    if (krit.Length != 0)
                     {
-                        sw.Write(city + " ");
+                        sw.Write(krit);
                     }
-                    sw.Write("0 с длиной пути " + list[0].Fitness);
-
+                    else
+                    {
+                        
+                        sw.Write("Кратчайший маршрут: 0 ");
+                        foreach (var city in list[0].Genes)
+                        {
+                            sw.Write(city + " ");
+                        }
+                        sw.Write("0 с длиной пути " + list[0].Fitness);
+                    }
                 }
             }
+
         }
         
     }

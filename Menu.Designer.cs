@@ -44,6 +44,8 @@ namespace GAinTSP
             this.MaxPops = new System.Windows.Forms.TextBox();
             this.PopsMax = new System.Windows.Forms.Label();
             this.MatrixBox = new System.Windows.Forms.RichTextBox();
+            this.ResultLabel = new System.Windows.Forms.Label();
+            this.MatrixLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -178,15 +180,35 @@ namespace GAinTSP
             this.MatrixBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.MatrixBox.Location = new System.Drawing.Point(45, 46);
             this.MatrixBox.Name = "MatrixBox";
-            this.MatrixBox.Size = new System.Drawing.Size(402, 292);
+            this.MatrixBox.Size = new System.Drawing.Size(402, 238);
             this.MatrixBox.TabIndex = 19;
             this.MatrixBox.Text = "";
+            // 
+            // ResultLabel
+            // 
+            this.ResultLabel.AutoSize = true;
+            this.ResultLabel.Location = new System.Drawing.Point(118, 400);
+            this.ResultLabel.Name = "ResultLabel";
+            this.ResultLabel.Size = new System.Drawing.Size(0, 13);
+            this.ResultLabel.TabIndex = 20;
+            this.ResultLabel.Visible = false;
+            // 
+            // MatrixLabel
+            // 
+            this.MatrixLabel.AutoSize = true;
+            this.MatrixLabel.Location = new System.Drawing.Point(64, 19);
+            this.MatrixLabel.Name = "MatrixLabel";
+            this.MatrixLabel.Size = new System.Drawing.Size(196, 13);
+            this.MatrixLabel.TabIndex = 21;
+            this.MatrixLabel.Text = "Исходная матрица смежности графа";
             // 
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.MatrixLabel);
+            this.Controls.Add(this.ResultLabel);
             this.Controls.Add(this.MatrixBox);
             this.Controls.Add(this.PopsMax);
             this.Controls.Add(this.MaxPops);
@@ -225,5 +247,7 @@ namespace GAinTSP
         private System.Windows.Forms.TextBox MaxPops;
         private System.Windows.Forms.Label PopsMax;
         private System.Windows.Forms.RichTextBox MatrixBox;
+        private System.Windows.Forms.Label ResultLabel;
+        private System.Windows.Forms.Label MatrixLabel;
     }
 }

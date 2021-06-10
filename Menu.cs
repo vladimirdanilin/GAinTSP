@@ -20,6 +20,8 @@ namespace GAinTSP
         public int NumOfPopulations { get; private set; }
         public int MaxNumOfPopulations { get; private set; }
 
+        public override bool AutoSize { get; set; }
+
         public bool Checked { get; set; }
         public int x1 { get; set; }
         public int x2 { get; set; }
@@ -100,9 +102,27 @@ namespace GAinTSP
             Start start = new Start(NumOfSpecies, Result, NumOfPopulations, Checked, MaxNumOfPopulations);
             start.Run(InputFile, OutputFile);
             //PrintMatrix();
-            
+
+            string InputPath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
             MatrixBox.Text = File.ReadAllText(@"C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\text.txt");
 
+            if (InputFile != null)
+            {
+                InputPath = InputPath + InputFile;
+                MatrixBox.Text = File.ReadAllText(@InputPath);
+            }
+
+            string OutputPath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
+            ResultLabel.Text = File.ReadAllText(@"C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\result.txt", System.Text.Encoding.Default);
+
+            if (OutputFile != null)
+            {
+                OutputPath = OutputPath + OutputFile;
+                ResultLabel.Text = File.ReadAllText(OutputPath, System.Text.Encoding.Default);
+            }
+
+            ResultLabel.Visible = true;
+            
         }
 
         private void PrintMatrix()
@@ -159,6 +179,7 @@ namespace GAinTSP
 
 
         }
+
     }
 }
     
