@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace GAinTSP
 {
 
-    public class Chromosome
+    public class Adjacency
     {
         public double[,] AdjMatrix { get; set; }
         public int NumOfCities { get; set; }
 
 
-        public Chromosome()
+        public Adjacency()
         {
             
         }

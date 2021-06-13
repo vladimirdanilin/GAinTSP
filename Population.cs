@@ -49,10 +49,16 @@ namespace GAinTSP
             int[] father = new int[numofcities - 1];
             int[] offspring1 = new int[numofcities - 1];
             int[] offspring2 = new int[numofcities - 1];
-            for (int i = 0; i < NumOfSpecies/2; i++)
-            { //Для каждой "матери" из первой половины начальной популяции рандомным образом подбирается "отец" из второй половины.
-                mother = listOfParentalSpecies.ElementAt(i).Genes;
-                father = listOfParentalSpecies.ElementAt(random.Next(NumOfSpecies/2, NumOfSpecies)).Genes;
+            for (int i = 0; i < NumOfSpecies / 2; i++)
+            { //Сначала ищется особь с индексом m, затем особь с индексом f, причем m!=f
+                int m = random.Next(0, NumOfSpecies);
+                int f = random.Next(0, NumOfSpecies);
+                while (f == m)
+                {
+                    f = random.Next(0, NumOfSpecies);
+                }
+                mother = listOfParentalSpecies.ElementAt(m).Genes;
+                father = listOfParentalSpecies.ElementAt(f).Genes;
                 offspring1 = Breeding(mother, father, numofcities);
                 offspring2 = Breeding(father, mother, numofcities);
 
@@ -67,18 +73,18 @@ namespace GAinTSP
 
         }
 
-        public int[] Breeding(int[] mother, int[] father, int numofcities)
+        public int[] Breeding(int[] parent1, int[] parent2, int numofcities)
         {
-            int r = random.Next(0,numofcities);
+            int r = random.Next(0, numofcities); //Граница генов.
             int[] offspring = new int[numofcities - 1];
             for (int i = 0; i < r; i++)
             {
-                offspring[i] = mother[i];
+                offspring[i] = parent1[i];
             }
 
             for (int i = r; i < numofcities; i++)
             {
-                foreach (var gene in father)
+                foreach (var gene in parent2)
                 {
                     if (!offspring.Contains(gene))
                     {
@@ -90,16 +96,16 @@ namespace GAinTSP
             return offspring;
         }
 
-        public List<Person> Mutation(int numofcities, List<Person> listOfOffspringSpecies, List<Person> listOfOffspringSpeciesMutated)
+        public List<Person> Mutation(int numofcities, List<Person> listOfOffspringSpecies, List<Person> listOfOffspringSpeciesMutated, double percentOfMutation)
         {
             int[] arr;
 
             foreach (var offspring in listOfOffspringSpecies)
             {
-
                 int a = random.Next(0, numofcities - 1);
                 int b = random.Next(a + 1, numofcities - 1);
-                arr = new int[b - a];
+                int mut = Convert.ToInt32(Math.Round((b-a) * percentOfMutation / 100));
+                arr = new int[mut];
                 Array.Copy(offspring.Genes, a, arr, 0, arr.Length);
 
                 arr = arr.Reverse().ToArray();

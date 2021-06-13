@@ -18,23 +18,39 @@ namespace GAinTSP
         List<Person> BestSpecies = new List<Person>();
         int NumOfCities;
         int NumOfSpecies;
+        double PercentOfMutation = 100;
         double Result; //Значение функции пригодности
         int NumOfPopulations;
         int MaxNumOfPopulations = 60; //Дефолтное значение количества поколений, после которого генерируется новое начальное поколение
         bool Checked;
         string krit = ""; //Зависит от k (Было ли достигнуто критическое число поколений)
-        public Start(int numOfSpecies, double result, int numOfPopulations, bool Checked1, int maxNumOfPopulations)
+        public Start(int numOfSpecies, double result, int numOfPopulations, bool Checked1, int maxNumOfPopulations, double percentOfMutation)
         {
             NumOfSpecies = numOfSpecies;
             Result = result;
             NumOfPopulations = numOfPopulations;
             Checked = Checked1;
+            /*if (numOfSpeciesForCrossover != 0)
+            {
+                NumOfSpeciesForCrossover = numOfSpeciesForCrossover;
+            }
+            else
+            {
+                NumOfSpeciesForCrossover = NumOfSpecies;
+            }*/
             if (maxNumOfPopulations != 0)
             {
                 MaxNumOfPopulations = maxNumOfPopulations;
             }
-            
+
+            if (percentOfMutation != 0)
+            {
+                PercentOfMutation = percentOfMutation;
+            }
+
+
         }
+        
 
 
 
@@ -43,9 +59,9 @@ namespace GAinTSP
 
         public void Run(string inputFile, string outputFile)
         {
-            Chromosome chromosome = new Chromosome();
-            NumOfCities = chromosome.Matrix(inputFile);
-            AdjMatrix = chromosome.GetAdjMatrix();
+            Adjacency adjacency = new Adjacency();
+            NumOfCities = adjacency.Matrix(inputFile);
+            AdjMatrix = adjacency.GetAdjMatrix();
 
             if (Checked == true)
             {
@@ -141,7 +157,7 @@ namespace GAinTSP
                 Population initialspecies = new Population(NumOfSpecies);
                 ListOfParentalSpecies = initialspecies.GenerateSpecies(NumOfCities, ListOfParentalSpecies);
                 ListOfOffspringSpecies = initialspecies.Crossover(NumOfCities, ListOfParentalSpecies, ListOfOffspringSpecies);
-                ListOfOffspringSpeciesMutated = initialspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
+                ListOfOffspringSpeciesMutated = initialspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated, PercentOfMutation);
                 ListOfSpeciesUnited = UniteLists(ListOfParentalSpecies, ListOfOffspringSpeciesMutated);
                 CountDistance(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
             }
@@ -155,7 +171,7 @@ namespace GAinTSP
                 ListOfSpeciesUnited.Clear();
                 Population newspecies = new Population(NumOfSpecies);
                 ListOfOffspringSpecies = newspecies.Crossover(NumOfCities, ListOfSpeciesSorted, ListOfOffspringSpecies);
-                ListOfOffspringSpeciesMutated = newspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated);
+                ListOfOffspringSpeciesMutated = newspecies.Mutation(NumOfCities, ListOfOffspringSpecies, ListOfOffspringSpeciesMutated, PercentOfMutation);
                 ListOfSpeciesUnited = UniteLists(ListOfSpeciesSorted, ListOfOffspringSpeciesMutated);
                 CountDistance(ListOfSpeciesUnited, AdjMatrix, ListOfSpeciesSorted);
             }
@@ -183,8 +199,8 @@ namespace GAinTSP
 
                 List<Person> TestList = new List<Person>();
                 
-                
                 TestList.AddRange(list.ToList());
+
                 foreach (var person in list) //Отбираются только лучшие особи с минимальным значением функции качества
                 {
                     if (person.Fitness != list[0].Fitness)

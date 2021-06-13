@@ -17,14 +17,11 @@ namespace GAinTSP
         public string OutputFile { get; private set; }
         public int NumOfSpecies { get; private set; }
         public double Result { get; private set; }
+        public double PercentOfMutations { get; private set; }
         public int NumOfPopulations { get; private set; }
         public int MaxNumOfPopulations { get; private set; }
 
-        public override bool AutoSize { get; set; }
-
         public bool Checked { get; set; }
-        public int x1 { get; set; }
-        public int x2 { get; set; }
 
         public Menu()
         {
@@ -41,6 +38,15 @@ namespace GAinTSP
             if (int.TryParse(NumOfSpeciesBox.Text, out numOfSpecies))
             {
                 NumOfSpecies = numOfSpecies;
+            }
+        }
+
+        private void MutBox_TextChanged(object sender, EventArgs e)
+        {
+            double percentOfMutations;
+            if (double.TryParse(MutBox.Text, out percentOfMutations))
+            {
+                PercentOfMutations = percentOfMutations;
             }
         }
 
@@ -95,7 +101,7 @@ namespace GAinTSP
 
         private void OKbutton_Click(object sender, EventArgs e)
         {
-            Start start = new Start(NumOfSpecies, Result, NumOfPopulations, Checked, MaxNumOfPopulations);
+            Start start = new Start(NumOfSpecies, Result, NumOfPopulations, Checked, MaxNumOfPopulations, PercentOfMutations);
             start.Run(InputFile, OutputFile);
 
             string InputPath = "C:\\Users\\Владимир\\source\\repos\\GAinTSP — MAIN\\bin\\Debug\\";
@@ -119,7 +125,7 @@ namespace GAinTSP
             
         }
 
-
+        
     }
 }
     

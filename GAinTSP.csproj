@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chromosome.cs" />
+    <Compile Include="Adjacency.cs" />
     <Compile Include="Fitness.cs" />
     <Compile Include="Menu.cs">
       <SubType>Form</SubType>
